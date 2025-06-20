@@ -20,6 +20,10 @@ app.use(helmet());
 // Compress response to reduce data transfer size. Improves page load speed
 app.use(compression());
 
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: true
+}))
 // Initialize database connection
 require('./dbs/init.mongodb');
 
