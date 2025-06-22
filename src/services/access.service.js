@@ -6,6 +6,7 @@ const crypto = require("crypto");
 const KeyTokenService = require("./keyToken.service");
 const { createTokenPair } = require("../auth/authUtils");
 const { getInfoData } = require("../utils");
+const { ConflictRequestError, BadRequestError } = require("../core/error.response");
 
 const RoleShop = {
   SHOP: "SHOP",
@@ -15,22 +16,11 @@ const RoleShop = {
 };
 class AccessService {
   static signUp = async ({ name, email, password }) => {
-    try {
-      // Validate required fields
-      if (!name || !email || !password) {
-        return {
-          code: "400",
-          message: "Missing required fields: name, email, password",
-        };
-      }
-
-      // step 1: Check email exists
+    // try {
+      // Check email exists
       const holderShop = await shopModel.findOne({ email }).lean();
       if (holderShop) {
-        return {
-          code: "xxxx",
-          message: "Shop already registered",
-        };
+          throw new ConflictRequestError('Error: shop already registered')
       }
       const passwordHash = await bcrypt.hash(password, 10);
       const newShop = await shopModel.create({
@@ -66,10 +56,7 @@ class AccessService {
           publicKey
         });
         if (!keyStore) {
-          return {
-            code: "xxxx",
-            message: "publicKeyString error",
-          };
+          throw new BadRequestError('Error: publicKeyString error')
         }
         // // Convert publicKey from database
         // const publicKeyObject = crypto.createPublicKey(publicKeyString);
@@ -92,13 +79,13 @@ class AccessService {
         code: "200",
         metadata: null,
       };
-    } catch (error) {
-      return {
-        code: "xxx",
-        message: error.message,
-        status: "error",
-      };
-    }
+  //   } catch (error) {
+  //     return {
+  //       code: "xxx",
+  //       message: error.message,
+  //       status: "error",
+  //     };
+  //   }
   };
 }
 

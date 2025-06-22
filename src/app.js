@@ -6,20 +6,9 @@ const compression = require('compression');
 const app = express();
 
 // Initialize middleware
-// morgan('dev'): Log requests with concise format, suitable for development
-// Other morgan formats:
-// - combined: Full format, suitable for production
-// - common: Standard format
-// - short: Short format
-// - tiny: Minimal format
 app.use(morgan('dev'));
-// Set up security and optimization middleware
-// setting secure HTTP headers. Prevents common attacks like XSS
 app.use(helmet());
-
-// Compress response to reduce data transfer size. Improves page load speed
 app.use(compression());
-
 app.use(express.json());
 app.use(express.urlencoded({
     extended: true
@@ -35,6 +24,21 @@ require('./dbs/init.mongodb');
 app.use('/',require('./routes'));
 
 // Error handling
+app.use((req, res, next) =>{
+    const error = new Error('Not found')
+    error.status = 404
+    next(error)
+})
+
+app.use((error, req, res, next)=>{
+    const statusCode = error.status || 500 // error server code
+    return res.status(statusCode).json({
+        status: 'error',
+        code: statusCode,
+        message: error.message || 'Internal server error'
+    })
+}
+)
 
 // Export app for use in server.js
 module.exports = app;

@@ -1,7 +1,6 @@
 'use strict';
 
 const { Schema, model } = require('mongoose'); // Erase if already required
-const { schema } = require('./shop.model');
 
 const DOCUMENT_NAME = 'Key';
 const COLLECTIONS_NAME = 'Keys';
@@ -25,8 +24,8 @@ const keyTokenSchema = new Schema({
     default: [],
   }
 }, {
+    timestamps: true,
     collection: COLLECTIONS_NAME,
-    timestamps: true
 });
 
 //Export the model

@@ -2,10 +2,13 @@
 ### Sign up
 POST {{usr_dev}}/shop/signup
 Content-Type: application/json
+x-api-key: 8a9a8df6322434dd6e4d06de4063b604c5e1e029d4aca8809fdc66e568af0b51b71159360058b50aa3d9f884588688f8017d24b575f28c0654c35e659f1661f1
+
+
 
 {
-    "name": "Shop Thoai",
-    "email": "shop2@gmail.com",
+    "name": "ShopThoai",
+    "email": "shopapikey@gmail.com",
     "password": "abc123"
 }
 
