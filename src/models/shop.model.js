@@ -1,16 +1,16 @@
-'use strict';
+'use strict'
 
-const { model, Schema, Types } = require('mongoose'); // Erase if already required
+const { model, Schema } = require('mongoose') // Erase if already required
 
-const DOCUMENT_NAME = 'shop';
-const COLLECTION_NAME = 'shops';
+const DOCUMENT_NAME = 'Shop'
+const COLLECTION_NAME = 'Shops'
 // Declare the Schema of the Mongo model
 const shopSchema = new Schema(
   {
     name: {
       type: String,
       trim: true,
-      maxLength: 150,
+      maxlength: 150,
     },
     email: {
       type: String,
@@ -38,8 +38,8 @@ const shopSchema = new Schema(
   {
     timestamps: true,
     collection: COLLECTION_NAME,
-  }
-);
+  },
+)
 
 //Export the model
-module.exports = model(DOCUMENT_NAME, shopSchema);
+module.exports = model(DOCUMENT_NAME, shopSchema)
