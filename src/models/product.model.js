@@ -3,7 +3,7 @@
 const { Schema, model } = require('mongoose') // Erase if already required
 
 const DOCUMENT_NAME = 'Product'
-const COLLECTION_NAME = 'Products'
+const COLLECTION_NAME = 'products'
 // Declare the Schema of the Mongo model
 const productSchema = new Schema(
   {
@@ -58,10 +58,14 @@ const clothingSchema = new Schema(
     material: {
       type: String,
     },
+    product_shop: {
+      type: Schema.Types.ObjectId,
+      ref: 'Shop',
+    },
   },
   {
     timestamps: true,
-    collection: 'Clothes',
+    collection: 'clothes',
   },
 )
 //Define the product type electronic
@@ -77,15 +81,44 @@ const electronicSchema = new Schema(
     color: {
       type: String,
     },
+    product_shop: {
+      type: Schema.Types.ObjectId,
+      ref: 'Shop',
+    },
   },
   {
     timestamps: true,
-    collection: 'Electronics',
+    collection: 'electronics',
   },
 )
+//Define the product type Furniture
+const furnitureSchema = new Schema(
+  {
+    manufacturer: {
+      type: String,
+      required: true,
+    },
+    model: {
+      type: String,
+    },
+    color: {
+      type: String,
+    },
+    product_shop: {
+      type: Schema.Types.ObjectId,
+      ref: 'Shop',
+    },
+  },
+  {
+    timestamps: true,
+    collection: 'furnitures',
+  },
+)
+
 //Export the model
 module.exports = {
   product: model(DOCUMENT_NAME, productSchema),
   clothing: model('Clothing', clothingSchema),
   electronic: model('Electronic', electronicSchema),
+  furniture: model('Furniture', furnitureSchema),
 }

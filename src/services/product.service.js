@@ -1,10 +1,29 @@
 'use strict'
 
-const { product, clothing, electronic } = require('../models/product.model')
+const { BadRequestError } = require('../core/error.response')
+const {
+  product,
+  clothing,
+  electronic,
+  furniture,
+} = require('../models/product.model')
 
-// Define factory class
+// Factory pattern
 class ProductFactory {
-  static async createProduct() {}
+  /*
+    type: Clothing, Electronic
+    payload
+  */
+  static async createProduct(type, payload) {
+    switch (type) {
+      case 'Electronic':
+        return new Electronic(payload).createProduct()
+      case 'Clothing':
+        return new Clothing(payload).createProduct()
+      default:
+        throw new BadRequestError(`Invalid type of product: ${type}`)
+    }
+  }
 }
 
 //Define base product
@@ -29,9 +48,57 @@ class Product {
     this.product_attributes = product_attributes
   }
   //Create
-    async createProduct(){
-        return await product.create(this);
-    }
+  async createProduct(product_id) {
+    return await product.create({ ...this, _id: product_id }) // Id of type product is id of product
+  }
 }
 
-//Define for difference product type clothing
+//Define for difference product type
+// Clothing
+// Cần xử lý khi tạo product lỗi mà vẫn tạo clothing trong cơ sở dữ liệu
+class Clothing extends Product {
+  async createProduct() {
+    const newClothing = await clothing.create({
+      ...this.product_attributes,
+      product_shop: this.product_shop,
+    })
+    if (!newClothing) throw new BadRequestError('create clothing error')
+
+    const newProduct = await super.createProduct(newClothing._id)
+    if (!newProduct) throw new BadRequestError('create product error')
+
+    return newProduct
+  }
+}
+// electronic
+class Electronic extends Product {
+  async createProduct() {
+    const newElectronic = await electronic.create({
+      ...this.product_attributes,
+      product_shop: this.product_shop,
+    })
+    if (!newElectronic) throw new BadRequestError('create electronic error')
+
+    const newProduct = await super.createProduct(newElectronic._id)
+    if (!newProduct) throw new BadRequestError('create product error')
+
+    return newProduct
+  }
+}
+// Furniture
+class Furniture extends Product {
+  async createProduct() {
+    const newFurniture = await furniture.create({
+      ...this.product_attributes,
+      product_shop: this.product_shop,
+    })
+    if (!newFurniture) throw new BadRequestError('create furniture error')
+
+    const newProduct = await super.createProduct(newFurniture._id)
+    if (!newProduct) throw new BadRequestError('create product error')
+
+    return newProduct
+  }
+}
+
+module.exports = ProductFactory
