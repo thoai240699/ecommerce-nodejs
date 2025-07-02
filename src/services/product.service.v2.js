@@ -7,6 +7,12 @@ const {
   electronic,
   furniture,
 } = require('../models/product.model')
+const {
+  findAllDraftsForShop,
+  findAllPublishForShop,
+  publishProductByShop,
+  unPublishProductByShop,
+} = require('../models/repositories/product.repo')
 
 // Factory pattern
 class ProductFactory {
@@ -20,11 +26,36 @@ class ProductFactory {
     ProductFactory.productRegistry[type] = classRef
   }
 
+  // POST
   static async createProduct(type, payload) {
     const productClass = ProductFactory.productRegistry[type]
-    if(!productClass) throw new BadRequestError(`Invalid product type: ${type}`)
+    if (!productClass)
+      throw new BadRequestError(`Invalid product type: ${type}`)
 
     return new productClass(payload).createProduct()
+  }
+
+  // PUT
+  // static async publishProductByShop({ product_shop, product_id }) {
+  //   return await publishProductByShop({ product_shop, product_id })
+  // }
+    static async publishProductByShop({product_id }) {
+    return await publishProductByShop({ product_id })
+  }
+
+  static async unPublishProductByShop({product_id }) {
+    return await unPublishProductByShop({ product_id })
+  }
+
+  // Query
+  static async findAllDraftsForShop({ product_shop, limit = 50, skip = 0 }) {
+    const query = { product_shop, isDraft: true }
+    return await findAllDraftsForShop({ query, limit, skip })
+  }
+
+  static async findAllPublishForShop({ product_shop, limit = 50, skip = 0 }) {
+    const query = { product_shop, isPublished: true }
+    return await findAllPublishForShop({ query, limit, skip })
   }
 }
 

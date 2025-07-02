@@ -20,6 +20,7 @@ const shopSchema = new Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     status: {
       type: String,
