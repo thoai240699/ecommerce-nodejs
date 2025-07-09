@@ -12,6 +12,9 @@ const {
   findAllPublishForShop,
   publishProductByShop,
   unPublishProductByShop,
+  searchProductByUser,
+  findAllProduct,
+  findProduct,
 } = require('../models/repositories/product.repo')
 
 // Factory pattern
@@ -39,11 +42,11 @@ class ProductFactory {
   // static async publishProductByShop({ product_shop, product_id }) {
   //   return await publishProductByShop({ product_shop, product_id })
   // }
-    static async publishProductByShop({product_id }) {
+  static async publishProductByShop({ product_id }) {
     return await publishProductByShop({ product_id })
   }
 
-  static async unPublishProductByShop({product_id }) {
+  static async unPublishProductByShop({ product_id }) {
     return await unPublishProductByShop({ product_id })
   }
 
@@ -57,6 +60,36 @@ class ProductFactory {
     const query = { product_shop, isPublished: true }
     return await findAllPublishForShop({ query, limit, skip })
   }
+
+  static async findAllProduct({
+    limit = 50,
+    sort = 'ctime',
+    page = 1,
+    filter = { isPublished: true },
+    select,
+  }) {
+    let selectFields = select
+    if (typeof select === 'string') {
+      selectFields = select.split(',').map((field) => field.trim())
+    }
+    return await findAllProduct({
+      limit,
+      sort,
+      page,
+      filter,
+      select: selectFields,
+    })
+  }
+
+  static async getListSearchProduct({ keySearch }) {
+    return await searchProductByUser({ keySearch })
+  }
+  
+  static async findProduct({ product_id }) {
+    return await findProduct({ product_id, unSelect: ['__v'] })
+  }
+
+  //END class
 }
 
 //Define base product

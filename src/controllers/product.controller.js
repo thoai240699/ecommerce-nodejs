@@ -14,7 +14,7 @@ class ProductController {
     }).send(res)
   }
 
-  // PUT
+  // PUT - Update product status to published
   publishProductByShop = async (req, res, next) => {
     new OK({
       message: 'publish product success',
@@ -25,6 +25,7 @@ class ProductController {
     }).send(res)
   }
 
+  // PUT - Update product status to unpublished
   unPublishProductByShop = async (req, res, next) => {
     new OK({
       message: 'UnPublish product success',
@@ -62,7 +63,26 @@ class ProductController {
     }).send(res)
   }
 
-  //END query
+  getListSearchProduct = async (req, res, next) => {
+    new OK({
+      message: 'Get list Search Product  success',
+      metadata: await ProductServiceV2.getListSearchProduct(req.params),
+    }).send(res)
+  }
+  getAllProduct = async (req, res, next) => {
+    new OK({
+      message: 'Get list all Product  success',
+      metadata: await ProductServiceV2.findAllProduct(req.query),
+    }).send(res)
+  }
+  findProduct = async (req, res, next) => {
+    new OK({
+      message: 'Get Product  success',
+      metadata: await ProductServiceV2.findProduct({
+        product_id: req.params.product_id,
+      }),
+    }).send(res)
+  }
 }
 
 module.exports = new ProductController()

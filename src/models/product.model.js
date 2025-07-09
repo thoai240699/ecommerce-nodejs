@@ -71,6 +71,12 @@ const productSchema = new Schema(
     collection: COLLECTION_NAME,
   },
 )
+// Index for Search
+productSchema.index({ product_name: 'text', product_description: 'text' })
+// If you want to index product_price for queries, use a separate index:
+productSchema.index({ product_price: 1 })
+
+
 // Document middleware: run before save(), .create(),...
 productSchema.pre('save', function (next) {
   this.product_slug = slugify(this.product_name, { lower: true, strict: true })
